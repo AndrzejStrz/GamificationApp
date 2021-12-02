@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-9u_qos4y5*$xamq%nkw-#4fy91$c#1)n&_8#jy^#p@*)da)bpd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'authorisation.apps.AuthorisationConfig',
+    'rewardsxdxd.apps.RewardsConfig',
+    'friendship',
 ]
 
 MIDDLEWARE = [
@@ -113,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
