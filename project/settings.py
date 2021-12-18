@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'authorisation.apps.AuthorisationConfig',
-    'rewardsxdxd.apps.RewardsConfig',
+    'lobby.apps.RewardsConfig',
     'friendship',
 ]
 
