@@ -2,6 +2,7 @@ import friendship
 import friendship.models
 
 from authorisation import models
+from authorisation.models import CustomPerson
 from lobby.models import Lobby
 
 
@@ -9,10 +10,11 @@ def validator_friends():
     uniqueFriendList = unique_freiends()
 
     for x in range(len(uniqueFriendList)):
+        uniqueFriendList[x][0] = uniqueFriendList[x][1]
         uniqueFriendList[x] = tuple(uniqueFriendList[x])
 
     uniqueFriendList = tuple(uniqueFriendList)
-
+    print(uniqueFriendList)
     return uniqueFriendList
 
 def user_friends(logged_user):
@@ -24,7 +26,6 @@ def user_friends(logged_user):
             logged_user_friends.append(table[x][1])
         elif table[x][1] == logged_user.id:
             logged_user_friends.append(table[x][0])
-    print(logged_user_friends)
     return logged_user_friends
 
 
@@ -41,5 +42,10 @@ def unique_freiends():
     for x in friendsList:
         if x not in uniqueFriendList:
             uniqueFriendList.append(x)
+
+    for x in range(len(uniqueFriendList)):
+        uniqueFriendList[x][0] = CustomPerson.objects.filter(id=uniqueFriendList[x][0])[0]
+        uniqueFriendList[x][1] = CustomPerson.objects.filter(id=uniqueFriendList[x][1])[0]
+
     return uniqueFriendList
 

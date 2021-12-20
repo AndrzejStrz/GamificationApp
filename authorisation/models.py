@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -10,5 +10,4 @@ class CustomPerson(AbstractUser):
             MinValueValidator(0)
         ]
     )
-    objects = UserManager()
 

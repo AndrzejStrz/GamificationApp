@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, FormView, CreateView
 
 import lobby
+from authorisation.models import CustomPerson
 from lobby import models
 from lobby.forms import BadgeForms, LobbyCreate
 from lobby.models import Lobby
@@ -25,19 +26,21 @@ class CreateLobby(CreateView):
     template_name = 'lobbyCreate.html'
     success_url = '/'
 
-    def dispatch(self, request, *args, **kwargs):
-        validator_friends()
-        return super(CreateLobby, self).dispatch(request, *args, **kwargs)
-
     def form_valid(self, form):
         self.form=form
         current_user = self.request.user
+        friends_add = self.form.cleaned_data['friends']
+        pomoc = []
+        print(friends_add)
+        for x in range(len(friends_add)):
+            y = CustomPerson.objects.filter(username = friends_add[x]).values_list('id',flat=True)[0]
+            print(y)
+            pomoc.append(y)
+        print(pomoc)
         for lobby in Lobby.objects.filter(id=Lobby.objects.all().count()):
             lobby.users.add(current_user.id)
-            friends = user_friends(current_user)
-            for x in range(len(friends)):
-                print(friends[x])
-                lobby.users.add(friends[x])
+            for x in range(len(pomoc)):
+                lobby.users.add(pomoc[x])
 
         return super().form_valid(form)
 
