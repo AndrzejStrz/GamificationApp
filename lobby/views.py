@@ -5,20 +5,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, CreateView
 
 import lobby
 from authorisation.models import CustomPerson
 from lobby import models
-from lobby.forms import BadgeForms, LobbyCreate
-from lobby.models import Lobby
-from lobby.utils import validator_friends, user_friends
-
-
-class RewardsView(CreateView):
-    form_class = BadgeForms
-    template_name = 'rewards.html'
-    success_url = '/'
+from lobby.forms import LobbyCreate
+from lobby.models import Lobby, LobbyTask
 
 
 class CreateLobby(CreateView):
@@ -44,12 +38,67 @@ class CreateLobby(CreateView):
 
         return super().form_valid(form)
 
-def add_user_to_race_lobby(request, game_id):
-    lobby = get_object_or_404(Lobby, game_id)
-    if lobby.users.filter(pk=request.user.pk).exists():
-        return redirect('game_page')
-    elif not lobby.is_occupied():
-        lobby.users.add(request.user)
-        return redirect('game_page')
-    else:
-        return render(request, "error_page.html")
+
+def addTask(request):
+    return render(request, 'addTask.html')
+
+def addTaskSubmit(request):
+    obj = LobbyTask()
+    obj.title = request.GET['title']
+    obj.points = request.GET['points']
+    obj.LevelOfDifficulty = request.GET['LevelOfDifficulty']
+    obj.description = request.GET['description']
+    obj.save()
+    mydictionary = {
+        "alltasks": LobbyTask.objects.all()
+    }
+    return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
+
+def delete(request,id):
+    obj= LobbyTask.objects.get(id=id)
+    obj.delete()
+    mydictionary = {
+        "alltasks": LobbyTask.objects.all().order_by('points')
+    }
+    sortdata(request)
+    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+
+
+def TasksList(request):
+    mydictionary = {
+        "alltasks": LobbyTask.objects.all().order_by('points')
+    }
+    sortdata(request)
+    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+
+def sortdata(request):
+    mydictionary = {
+        "alltasks": LobbyTask.objects.all().order_by('points')
+    }
+    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+
+def edit(request, id):
+    obj = LobbyTask.objects.get(id=id)
+    mydictionary = {
+        "title": obj.title,
+        "points": obj.points,
+        "LevelOfDifficulty": obj.LevelOfDifficulty,
+        "description": obj.description,
+        "isDone": obj.isDone,
+        "id": obj.id
+    }
+    return render(request, 'editTask.html', context=mydictionary)
+
+def update(request,id):
+    obj = LobbyTask(id=id)
+    obj.title = request.GET['title']
+    obj.points = request.GET['points']
+    obj.LevelOfDifficulty = request.GET['LevelOfDifficulty']
+    obj.description = request.GET['description']
+    obj.isDone = request.GET['isDone']
+    obj.save()
+    sortdata(request)
+    mydictionary = {
+        "alltasks": LobbyTask.objects.all()
+    }
+    return render(request, 'allLobbyCreateTasks.html', context=mydictionary)

@@ -7,12 +7,6 @@ import uuid
 from authorisation.models import CustomPerson
 
 
-class Rewards(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=2000)
-    image = models.ImageField(upload_to='achievement')
-
-
 LevelOfDifficultly = (
     ('Easy', 'Easy'),
     ('Medium', 'Medium'),
@@ -20,12 +14,15 @@ LevelOfDifficultly = (
 )
 
 
-class Task(models.Model):
+class LobbyTask(models.Model):
+    title = models.CharField(max_length=100)
     points = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0)])
     LevelOfDifficulty = models.CharField(
         max_length=6,
         choices=LevelOfDifficultly)
     description = models.CharField(max_length=1000)
+    isDone = models.BooleanField(default=False)
+
 
 
 TypeOfLobby = (
@@ -46,4 +43,9 @@ class Lobby(models.Model):
 
     def is_occupied(self):
         return self.users.count() >= 3
+
+
+class Lobby_Tasks(models.Model):
+    id_Lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+    id_Task = models.ForeignKey(LobbyTask, on_delete=models.CASCADE)
 

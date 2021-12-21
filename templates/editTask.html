@@ -1,0 +1,40 @@
+{% extends 'allLobbyCreateTasks.html' %}
+{% block title %}Edit Data{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6" style="margin: 0 auto;">
+      <form action="/update/{{id}}">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <textarea class="form-control" id="title" name="title" rows=1 >{{title}}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="3">{{description}}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="priority">Points</label>
+          <input type="number" class="form-control" id="points" name="points" value={{points}}>
+        </div>
+          <div class="form-group">
+          <label for="priority">Level of difficulty</label>
+          <select name="LevelOfDifficulty" class="form-control" id="LevelOfDifficulty" >
+                  <option value="" disabled selected>Choose new Level of difficulty</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="isDone">Is it done?</label>
+            <select name="isDone" class="form-control" id="isDone" >
+                <option value="" disabled selected>Is this task done?</option>
+                <option value="False">False</option>
+                <option value="True">True</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin: 0 auto;display: block;">Update</button>
+      </form>
+      </div>
+  </div>
+{% endblock %}

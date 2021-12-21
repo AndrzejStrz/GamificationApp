@@ -1,16 +1,7 @@
 from django import forms
 
-from authorisation.models import CustomPerson
-from .models import Rewards, Lobby
-from .utils import validator_friends, user_friends
-
-
-class BadgeForms(forms.ModelForm):
-    description = forms.Textarea()
-
-    class Meta:
-        model = Rewards
-        fields = ['image', 'name', 'description']
+from .models import Lobby
+from .utils import validator_friends
 
 
 class LobbyCreate(forms.ModelForm):
@@ -23,3 +14,14 @@ class LobbyCreate(forms.ModelForm):
     class Meta:
         model = Lobby
         fields = ['name', 'description', 'friends', 'time', 'type']
+
+
+class AddTask(forms.ModelForm):
+    LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
+    LevelOfDifficultyForm = forms.ChoiceField(required=True, choices=LevelOfDifficulty)
+
+
+class IsDone(forms.ModelForm):
+    isDone = (('True', 'True'), ('False', 'False'),)
+    isDoneForm = forms.ChoiceField(required=True, choices=isDone)
+
