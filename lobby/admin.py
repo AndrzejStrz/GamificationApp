@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.contrib import admin
 
-from lobby.models import Lobby
+from lobby.models import Lobby, Lobby_Tasks
 
 from django.contrib import admin
 
@@ -16,3 +16,4 @@ class LobbyAdmin(admin.ModelAdmin):
 admin.site.register(Lobby, LobbyAdmin)
 
 admin.site.register(LobbyTask)
+admin.site.register(Lobby_Tasks)

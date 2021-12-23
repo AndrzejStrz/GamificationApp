@@ -25,6 +25,7 @@ class LobbyTask(models.Model):
 
 
 
+
 TypeOfLobby = (
     ('Race', 'Race'),
     ('Cooperation', 'Cooperation'),
@@ -46,6 +47,5 @@ class Lobby(models.Model):
 
 
 class Lobby_Tasks(models.Model):
-    id_Lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
-    id_Task = models.ForeignKey(LobbyTask, on_delete=models.CASCADE)
-
+    id_Lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, related_name='id_Lobby')
+    id_Task = models.ForeignKey(LobbyTask, on_delete=models.CASCADE, related_name='id_Task')

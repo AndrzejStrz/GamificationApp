@@ -1,3 +1,4 @@
+from itertools import chain
 from urllib import request
 
 import friendship.models
@@ -12,13 +13,13 @@ import lobby
 from authorisation.models import CustomPerson
 from lobby import models
 from lobby.forms import LobbyCreate
-from lobby.models import Lobby, LobbyTask
+from lobby.models import Lobby, LobbyTask, Lobby_Tasks
 
 
 class CreateLobby(CreateView):
     form_class = LobbyCreate
     template_name = 'lobbyCreate.html'
-    success_url = '/'
+    success_url = '../addTask'
 
     def form_valid(self, form):
         self.form=form
@@ -49,6 +50,14 @@ def addTaskSubmit(request):
     obj.LevelOfDifficulty = request.GET['LevelOfDifficulty']
     obj.description = request.GET['description']
     obj.save()
+
+
+    Lobby_Tasks.objects.create(
+        id_Lobby=Lobby.objects.get(id=Lobby.objects.all().count()),
+        id_Task=LobbyTask.objects.get(id=obj.id)
+    )
+
+
     mydictionary = {
         "alltasks": LobbyTask.objects.all()
     }
@@ -65,9 +74,19 @@ def delete(request,id):
 
 
 def TasksList(request):
+    x = Lobby.objects.all().filter(id=30)
+    y = LobbyTask.objects.all().filter(id=78)
+    z = Lobby_Tasks.objects.all().filter(id_Lobby=30).aggregate(Lobby.objects.filter(id=30))
+
+    print(x)
+    print(y)
+    print(z)
+    if (x and y) == Lobby_Tasks.objects.all().filter(id_Lobby=30,id_Task=78):
+        print('gówno')
     mydictionary = {
         "alltasks": LobbyTask.objects.all().order_by('points')
     }
+
     sortdata(request)
     return render(request,'allLobbyCreateTasks.html', context=mydictionary)
 

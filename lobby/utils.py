@@ -14,7 +14,6 @@ def validator_friends():
         uniqueFriendList[x] = tuple(uniqueFriendList[x])
 
     uniqueFriendList = tuple(uniqueFriendList)
-    print(uniqueFriendList)
     return uniqueFriendList
 
 def user_friends(logged_user):
