@@ -25,3 +25,5 @@ class IsDone(forms.ModelForm):
     isDone = (('True', 'True'), ('False', 'False'),)
     isDoneForm = forms.ChoiceField(required=True, choices=isDone)
 
+class selectLobby(forms.ModelForm):
+    selectLobby = forms.ChoiceField(required=True, choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))

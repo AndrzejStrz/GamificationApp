@@ -23,6 +23,8 @@ class LobbyTask(models.Model):
     description = models.CharField(max_length=1000)
     isDone = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f'{self.title}'
 
 
 
@@ -45,7 +47,13 @@ class Lobby(models.Model):
     def is_occupied(self):
         return self.users.count() >= 3
 
+    def __str__(self):
+        return f'{self.users.values_list("first_name",flat=True)}'
+
 
 class Lobby_Tasks(models.Model):
     id_Lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, related_name='id_Lobby')
     id_Task = models.ForeignKey(LobbyTask, on_delete=models.CASCADE, related_name='id_Task')
+
+    def __str__(self):
+        return f'{self.id_Lobby} {self.id_Task.title}'

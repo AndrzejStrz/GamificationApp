@@ -22,13 +22,13 @@ class CreateLobby(CreateView):
     success_url = '../addTask'
 
     def form_valid(self, form):
-        self.form=form
+        self.form = form
         current_user = self.request.user
         friends_add = self.form.cleaned_data['friends']
         pomoc = []
         print(friends_add)
         for x in range(len(friends_add)):
-            y = CustomPerson.objects.filter(username = friends_add[x]).values_list('id',flat=True)[0]
+            y = CustomPerson.objects.filter(username=friends_add[x]).values_list('id', flat=True)[0]
             print(y)
             pomoc.append(y)
         print(pomoc)
@@ -43,6 +43,7 @@ class CreateLobby(CreateView):
 def addTask(request):
     return render(request, 'addTask.html')
 
+
 def addTaskSubmit(request):
     obj = LobbyTask()
     obj.title = request.GET['title']
@@ -51,50 +52,48 @@ def addTaskSubmit(request):
     obj.description = request.GET['description']
     obj.save()
 
-
     Lobby_Tasks.objects.create(
         id_Lobby=Lobby.objects.get(id=Lobby.objects.all().count()),
         id_Task=LobbyTask.objects.get(id=obj.id)
     )
-
 
     mydictionary = {
         "alltasks": LobbyTask.objects.all()
     }
     return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
 
-def delete(request,id):
-    obj= LobbyTask.objects.get(id=id)
+
+def delete(request, id):
+    obj = LobbyTask.objects.get(id=id)
     obj.delete()
     mydictionary = {
         "alltasks": LobbyTask.objects.all().order_by('points')
     }
     sortdata(request)
-    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+    return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
 
 
 def TasksList(request):
-    x = Lobby.objects.all().filter(id=30)
-    y = LobbyTask.objects.all().filter(id=78)
-    z = Lobby_Tasks.objects.all().filter(id_Lobby=30).aggregate(Lobby.objects.filter(id=30))
 
-    print(x)
-    print(y)
-    print(z)
-    if (x and y) == Lobby_Tasks.objects.all().filter(id_Lobby=30,id_Task=78):
-        print('gówno')
+    z = Lobby_Tasks.objects.filter(id__in=Lobby.objects.values_list('users', flat=True))
+    xd = Lobby_Tasks.objects.filter(id=1)
+
+    print(xd)
+
     mydictionary = {
         "alltasks": LobbyTask.objects.all().order_by('points')
     }
 
     sortdata(request)
-    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+    return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
+
 
 def sortdata(request):
     mydictionary = {
         "alltasks": LobbyTask.objects.all().order_by('points')
     }
-    return render(request,'allLobbyCreateTasks.html', context=mydictionary)
+    return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
+
 
 def edit(request, id):
     obj = LobbyTask.objects.get(id=id)
@@ -108,7 +107,8 @@ def edit(request, id):
     }
     return render(request, 'editTask.html', context=mydictionary)
 
-def update(request,id):
+
+def update(request, id):
     obj = LobbyTask(id=id)
     obj.title = request.GET['title']
     obj.points = request.GET['points']
@@ -121,3 +121,17 @@ def update(request,id):
         "alltasks": LobbyTask.objects.all()
     }
     return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
+
+
+class selectLobby(TemplateView):  # noqa D101
+    template_name = 'selectLobby.html'
+
+    def get_context_data(self, **kwargs):  # noqa D102
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        print(context)
+        context['alllobbys']= Lobby.objects.filter(id__in=Lobby.objects.values_list('id', flat=True)).filter(
+            users=current_user
+        )
+
+        return context

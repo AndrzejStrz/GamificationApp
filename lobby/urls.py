@@ -1,7 +1,8 @@
 from django.urls import path, include
 
 from . import views
-from .views import CreateLobby
+from .views import CreateLobby, selectLobby
+
 app_name = 'lobby'
 
 urlpatterns = [
@@ -12,4 +13,5 @@ urlpatterns = [
     path('TasksList', views.TasksList, name='TasksList'),
     path('edit/<int:id>', views.edit, name='edit'),
     path('update/<int:id>', views.update, name='update'),
+    path('SelectLobby', selectLobby.as_view(), name='SelectLobby'),
 ]
