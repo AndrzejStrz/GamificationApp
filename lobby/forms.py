@@ -1,6 +1,7 @@
 from django import forms
 
-from .models import Lobby
+from authorisation.models import CustomPerson
+from .models import Lobby, LobbyTask
 from .utils import validator_friends
 
 
@@ -13,10 +14,19 @@ class LobbyCreate(forms.ModelForm):
 
     class Meta:
         model = Lobby
-        fields = ['name', 'description', 'friends', 'time', 'type']
+        fields = ['name', 'description','friends', 'time']
+
+class TaskCreate(forms.ModelForm):
+    LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
+    LevelOfDifficultyForm = forms.ChoiceField(required=True, choices=LevelOfDifficulty)
+
+    class Meta:
+        model = LobbyTask
+        fields = ['title', 'points', 'LevelOfDifficultyForm', 'description']
 
 
-class AddTask(forms.ModelForm):
+
+class addTask(forms.ModelForm):
     LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
     LevelOfDifficultyForm = forms.ChoiceField(required=True, choices=LevelOfDifficulty)
 
@@ -27,3 +37,7 @@ class IsDone(forms.ModelForm):
 
 class selectLobby(forms.ModelForm):
     selectLobby = forms.ChoiceField(required=True, choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))
+
+    #use to fake when u migrate db
+    #selectLobby = forms.ChoiceField(required=True, choices=(('True', 'True'), ('False', 'False'),))
+
