@@ -1,20 +1,13 @@
-from itertools import chain
-from urllib import request
+import random
+from django.shortcuts import render
+from django.views.generic import TemplateView, ListView, CreateView
 
-import friendship.models
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-
-# Create your views here.
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, CreateView
-
-import lobby
 from authorisation.models import CustomPerson
 from lobby import models
 from lobby.forms import LobbyCreate, TaskCreate
-from lobby.models import Lobby, LobbyTask
+from lobby.models import Lobby, LobbyTask, Achievement
 from django.contrib.sessions.backends.db import SessionStore
+
 
 
 class CreateLobby(CreateView):
@@ -42,16 +35,10 @@ class CreateLobby(CreateView):
 class CreateTask(CreateView):
     form_class = TaskCreate
     template_name = 'addTask.html'
-    success_url = '../SelectLobby/<int:id>'
+    success_url = '../SelectLobby'
 
     def form_valid(self, form):
         self.form = form
-
-        full_path = self.request.get_full_path()
-        reverse_path = full_path[::-1]
-        id_from_path = reverse_path.split('/')[1]
-        LobbyTask.objects.filter(id=LobbyTask.objects.last().id).update(id_Lobby=id_from_path)
-
         return super().form_valid(form)
 
 
@@ -61,7 +48,6 @@ def delete(request, id):
         "alltasks": LobbyTask.objects.all().filter(id_Lobby=obj.id).order_by('points')
     }
     sortdata(request)
-    help = obj.id_Lobby.id
     obj.delete()
     return render(request, 'SelectLobby.html', context=mydictionary)
 
@@ -88,7 +74,6 @@ def edit(request,id):
 
 def update(request, id):
     obj = LobbyTask(id=id)
-    print('asddsasda')
     obj.title = request.GET['title']
     obj.points = request.GET['points']
     obj.LevelOfDifficulty = request.GET['LevelOfDifficulty']
@@ -128,5 +113,36 @@ class chosenLobby(TemplateView):
         full_path = self.request.get_full_path()
         id_path = take_id_from_path(full_path)
         context['alltasks']= LobbyTask.objects.filter(id_Lobby=id_path)
+        return context
+
+class closeLobby(TemplateView):
+    template_name = 'allLobbyCreateTasks.html'
+    success_url = '../SelectLobby'
+
+    def get_context_data(self, **kwargs):  # noqa D102
+        context = super().get_context_data(**kwargs)
+        full_path = self.request.get_full_path()
+        id_path = full_path[::-1].split('/')[1]
+        x=Lobby.objects.filter(id=id_path)
+        x.delete()
+        y = random.randint(1, 3)
+        y = 'achievement/'+str(y)+'.gif'
+        title= ['Tytuł 1','Tytuł 2','Tytuł 3','Tytuł 4','Tytuł 5']
+        description= ['Opis 1','Opis 2','Opis 3','Opis 4','Opis 5']
+
+        Achievement.objects.create(title=random.choice(title),description=random.choice(description), image=y)
+
+        return context
+
+class ListAchievementView(ListView):  # noqa D101
+    model = Achievement
+    template_name = 'list_achievement.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):  # noqa D102
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        context['data_photo'] = Achievement.objects.all()
+
 
         return context

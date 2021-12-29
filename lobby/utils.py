@@ -1,3 +1,5 @@
+import random
+
 import friendship
 import friendship.models
 
@@ -47,4 +49,5 @@ def unique_freiends():
         uniqueFriendList[x][1] = CustomPerson.objects.filter(id=uniqueFriendList[x][1])[0]
 
     return uniqueFriendList
+
 
