@@ -1,3 +1,4 @@
+import math
 import random
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView
@@ -35,7 +36,7 @@ class CreateLobby(CreateView):
 class CreateTask(CreateView):
     form_class = TaskCreate
     template_name = 'addTask.html'
-    success_url = '../SelectLobby'
+    success_url = '/SelectLobby'
 
     def form_valid(self, form):
         self.form = form
@@ -112,26 +113,43 @@ class chosenLobby(TemplateView):
         context = super().get_context_data(**kwargs)
         full_path = self.request.get_full_path()
         id_path = take_id_from_path(full_path)
+        context['id_Page']= id_path
         context['alltasks']= LobbyTask.objects.filter(id_Lobby=id_path)
+        if(LobbyTask.objects.filter(id_Lobby=id_path).count() == 0):
+            done = 1
+        else:
+            done = math.floor((LobbyTask.objects.filter(id_Lobby=id_path).filter(
+                isDone=True).count() / LobbyTask.objects.filter(id_Lobby=id_path).count()) * 100)
+
+        context['progress_done'] = done
+        context['progress_undone'] = 100 - done
         return context
 
 class closeLobby(TemplateView):
     template_name = 'allLobbyCreateTasks.html'
-    success_url = '../SelectLobby'
+    success_url = '../list'
 
     def get_context_data(self, **kwargs):  # noqa D102
         context = super().get_context_data(**kwargs)
         full_path = self.request.get_full_path()
         id_path = full_path[::-1].split('/')[1]
         x=Lobby.objects.filter(id=id_path)
-        x.delete()
+
         y = random.randint(1, 3)
-        y = 'achievement/'+str(y)+'.gif'
-        title= ['Tytuł 1','Tytuł 2','Tytuł 3','Tytuł 4','Tytuł 5']
-        description= ['Opis 1','Opis 2','Opis 3','Opis 4','Opis 5']
+        if y == 1:
+            description = "Here is your medal!"
+        elif y == 2:
+            description = "Here is your cup!"
+        else:
+            description = "Here is your star!"
+        y = 'achievement/'+str(y)+'.png'
 
-        Achievement.objects.create(title=random.choice(title),description=random.choice(description), image=y)
-
+        helpvar=[]
+        for z in range(x.values_list('users').count()):
+            helpvar.append(x.values_list('users')[z][0])
+        for z in helpvar:
+            Achievement.objects.create(title="You finished lobby number " + str(x[0].id), description=description, image=y, id_User=CustomPerson.objects.get(id=z))
+        x.delete()
         return context
 
 class ListAchievementView(ListView):  # noqa D101
@@ -142,7 +160,9 @@ class ListAchievementView(ListView):  # noqa D101
     def get_context_data(self, **kwargs):  # noqa D102
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
-        context['data_photo'] = Achievement.objects.all()
-
+        #context['data_photo'] = Achievement.objects.all()
+        context['data_photo'] = Achievement.objects.filter(id__in=Achievement.objects.values_list('id', flat=True)).filter(
+            id_User=current_user
+        )
 
         return context

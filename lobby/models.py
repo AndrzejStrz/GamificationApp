@@ -37,8 +37,11 @@ class LobbyTask(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+
+
 class Achievement(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
     image = models.ImageField(upload_to='images', null=True, blank=True)
+    id_User = models.ForeignKey(CustomPerson, on_delete=models.CASCADE, related_name='id_User', default=1)
 
