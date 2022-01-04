@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body style="overflow-x: hidden; background-color: grey">
+
+{% extends 'SelectLobby.html' %}
+{% block title %}{% endblock %}
+{% block content %}
+
+
+<div  style="margin:0 auto;">
+<a href="{{id_Page}}/addTask" class="btn btn-primary btn-warning btn-block" >Add task</a>
+</div>
+
+
+
+{% for task in alltasks %}
+<div class="row">
+    <div class="col-md-6" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;{%  if  task.isDone == True  %} background-color: green" {% else %} background-color: #CC040A" {% endif %}>
+            <div class="card-body">
+              <h5 class="card-title">{{task.title}} {{task.priority}}</h5>
+                <p class="card-text">{{task.description}}</p>
+                <p class="card-text">Points: {{task.points}}</p>
+                <p class="card-text"> {{task.LevelOfDifficulty}}</p>
+              <a href="/delete/{{task.id}}" class="btn btn-danger">Delete</a>
+              <a href="/edit/{{task.id}}" class="btn btn-warning">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+{%  if  forloop.last  %}
+    <center>
+    <div class="col-md-6" style="margin:0 auto">
+    <div style="margin-top: 1rem;font-size: 4rem">
+            {{ progress_done }}%
+    </div>
+    <div class="progress" style="margin-top: 1rem;">
+      <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: {{ progress_done }}%" aria-valuenow="{{ progress_done }}" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width: {{ progress_undone }}%" aria-valuenow="{{ progress_undone }}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div style="margin-top: 1rem;">
+        <a href="/SelectLobby/{{task.id_Lobby.id}}/closeLobby" class="btn btn-warning" >Close lobby</a>
+    </div>
+        <div style="margin-top: 1rem;"></div>
+
+    </div>
+    </center>
+{% endif %}
+
+
+{% endfor %}
+{% endblock %}
+</body>
+</html>
