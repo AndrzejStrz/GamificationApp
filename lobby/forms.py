@@ -6,15 +6,15 @@ from .utils import validator_friends
 
 
 class LobbyCreate(forms.ModelForm):
-    friends = forms.MultipleChoiceField(
-        required=True,
-        widget=forms.CheckboxSelectMultiple,
-        choices=validator_friends()
-    )
+    # friends = forms.MultipleChoiceField(
+    #     required=True,
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=validator_friends()
+    # )
 
     class Meta:
         model = Lobby
-        fields = ['name', 'description','friends', 'time']
+        fields = ['name', 'description', 'time']
 
 class TaskCreate(forms.ModelForm):
     LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
@@ -36,8 +36,8 @@ class IsDone(forms.ModelForm):
     isDoneForm = forms.ChoiceField(required=True, choices=isDone)
 
 class selectLobby(forms.ModelForm):
-    selectLobby = forms.ChoiceField(required=True, choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))
+    # selectLobby = forms.ChoiceField(required=True, choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))
 
     #use to fake when u migrate db
-    #selectLobby = forms.ChoiceField(required=True, choices=(('True', 'True'), ('False', 'False'),))
+    selectLobby = forms.ChoiceField(required=True, choices=(('True', 'True'), ('False', 'False'),))
 
