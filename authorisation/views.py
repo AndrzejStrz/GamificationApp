@@ -1,8 +1,16 @@
+import friendship
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.views.generic import TemplateView
 from friendship.models import Friend
+
+from authorisation.models import CustomPerson
+from lobby.models import LobbyTask
+from lobby.utils import leader_friends, user_friends
+
 
 def my_view(request):
     # List of this user's friends
@@ -33,3 +41,38 @@ def my_view(request):
     # `django.db.IntegrityError`.
     dupe_relationship = Friend.objects.add_friend(request.user, other_user)
     AlreadyExistsError: u'Friendship already requested'
+
+
+class LeaderBoard(TemplateView):
+    template_name = 'leaderboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['leaderboard'] = LobbyTask.objects.all().values('id_Lobby__users__username').filter(isDone=True) \
+            .annotate(total=Sum('points')).order_by('-total')
+
+        return context
+
+
+class LeaderBoardFriends(TemplateView):
+    template_name = 'leaderboard_friends.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        context['leaderboard'] = LobbyTask.objects.all().values('id_Lobby__users__username').filter(isDone=True) \
+            .annotate(total=Sum('points')).order_by('-total')
+
+        context['friends'] = friendship.models.Friend.objects.all().values('to_user').filter(from_user_id=current_user)
+
+        x = Friend.objects.all().filter(to_user_id=current_user.id)
+        print(x)
+
+        y = CustomPerson.objects.all().filter(id=x[0].from_user_id)
+        print(y)
+
+        context['xd'] = LobbyTask.objects.all().filter(id_Lobby__users__username=y[0].username, isDone=True) \
+            .values('id_Lobby__users__username').annotate(total=Sum('points')).order_by('-total')
+
+        return context

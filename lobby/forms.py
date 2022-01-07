@@ -6,38 +6,31 @@ from .utils import validator_friends
 
 
 class LobbyCreate(forms.ModelForm):
-    # friends = forms.MultipleChoiceField(
-    #     required=True,
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=validator_friends()
-    # )
+    friends = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=validator_friends()
+    )
 
     class Meta:
         model = Lobby
-        fields = ['name', 'description', 'time']
+        fields = ['name', 'friends', 'description', 'time']
+
 
 class TaskCreate(forms.ModelForm):
-    LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
-    LevelOfDifficultyForm = forms.ChoiceField(required=True, choices=LevelOfDifficulty)
-
     class Meta:
         model = LobbyTask
-        fields = ['title', 'points', 'LevelOfDifficultyForm', 'description']
-
-
-
-class addTask(forms.ModelForm):
-    LevelOfDifficulty = (('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'),)
-    LevelOfDifficultyForm = forms.ChoiceField(required=True, choices=LevelOfDifficulty)
+        fields = ['title', 'points', 'LevelOfDifficulty', 'description']
 
 
 class IsDone(forms.ModelForm):
     isDone = (('True', 'True'), ('False', 'False'),)
     isDoneForm = forms.ChoiceField(required=True, choices=isDone)
 
+
 class selectLobby(forms.ModelForm):
-    # selectLobby = forms.ChoiceField(required=True, choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))
+    selectLobby = forms.ChoiceField(required=True,
+                                    choices=Lobby.objects.filter(id__in=Lobby.objects.values_list('users', flat=True)))
 
-    #use to fake when u migrate db
-    selectLobby = forms.ChoiceField(required=True, choices=(('True', 'True'), ('False', 'False'),))
-
+    # use to fake when u migrate db
+    # selectLobby = forms.ChoiceField(required=True, choices=(('True', 'True'), ('False', 'False'),))

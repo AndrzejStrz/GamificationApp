@@ -1,0 +1,21 @@
+
+  <div class="main">
+
+    {% for data in leaderboard %}
+
+      <div style="text-align: center;">
+        <div class="bg-image hover-overlay ripple shadow-1-strong rounded custom" data-ripple-color="light">
+
+          {{ data.id_Lobby__users__username }}  {{ data.total}}
+          <div class="p-4 bg-dark rounded shadow-sm text-white">
+            {{ data.date_add }}<br/>
+          </div>
+        </div>
+        <hr/>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+  </body>

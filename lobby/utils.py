@@ -18,6 +18,7 @@ def validator_friends():
     uniqueFriendList = tuple(uniqueFriendList)
     return uniqueFriendList
 
+
 def user_friends(logged_user):
     table = unique_freiends()
     logged_user_friends = []
@@ -51,3 +52,22 @@ def unique_freiends():
     return uniqueFriendList
 
 
+def leader_friends(a, b):
+    help = []
+
+    for x in range(len(a)):
+        for y in range(len(b)):
+            if a[x]['to_user'] == CustomPerson.objects.get(username=b[y]['id_Lobby__users__username']).id:
+                help.append(a[x]['to_user'])
+
+    help.sort()
+    z = CustomPerson.objects.all().count()
+
+    pomoc = []
+    for i in range(z):
+        for j in range(len(help)):
+            if help[j] == CustomPerson.objects.get(id=i+1).id:
+                z = CustomPerson.objects.filter(id=help[j])
+                pomoc.append(z)
+
+    return pomoc

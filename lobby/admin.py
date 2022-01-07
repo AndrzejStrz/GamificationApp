@@ -1,7 +1,3 @@
-from django.contrib import admin
-
-from django.contrib import admin
-
 from lobby.models import Lobby, Achievement
 
 from django.contrib import admin

@@ -1,6 +1,6 @@
 import math
 import random
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, CreateView
 
 from authorisation.models import CustomPerson
@@ -8,7 +8,6 @@ from lobby import models
 from lobby.forms import LobbyCreate, TaskCreate
 from lobby.models import Lobby, LobbyTask, Achievement
 from django.contrib.sessions.backends.db import SessionStore
-
 
 
 class CreateLobby(CreateView):
@@ -32,7 +31,6 @@ class CreateLobby(CreateView):
         return super().form_valid(form)
 
 
-
 class CreateTask(CreateView):
     form_class = TaskCreate
     template_name = 'addTask.html'
@@ -40,6 +38,17 @@ class CreateTask(CreateView):
 
     def form_valid(self, form):
         self.form = form
+        form.save()
+
+        full_path = self.request.get_full_path()
+        id_path = full_path[::-1].split('/')[1]
+
+        x = Lobby.objects.get(id=id_path)
+
+        y = LobbyTask.objects.all().count()
+
+        z = LobbyTask.objects.filter(id=y).update(id_Lobby=x)
+        z.save()
         return super().form_valid(form)
 
 
@@ -60,7 +69,7 @@ def sortdata(request):
     return render(request, 'allLobbyCreateTasks.html', context=mydictionary)
 
 
-def edit(request,id):
+def edit(request, id):
     obj = LobbyTask.objects.get(id=id)
     mydictionary = {
         "id": id,
@@ -95,16 +104,18 @@ class selectLobby(TemplateView):  # noqa D101
     def get_context_data(self, **kwargs):  # noqa D102
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
-        context['alllobbys']= Lobby.objects.filter(id__in=Lobby.objects.values_list('id', flat=True)).filter(
+        context['alllobbys'] = Lobby.objects.filter(id__in=Lobby.objects.values_list('id', flat=True)).filter(
             users=current_user
         )
 
         return context
 
-def take_id_from_path(full_path): # noqa D103
+
+def take_id_from_path(full_path):  # noqa D103
     reverse_path = full_path[::-1]
     right_id = reverse_path.split('/')
     return right_id[0]
+
 
 class chosenLobby(TemplateView):
     template_name = 'allLobbyCreateTasks.html'
@@ -113,9 +124,9 @@ class chosenLobby(TemplateView):
         context = super().get_context_data(**kwargs)
         full_path = self.request.get_full_path()
         id_path = take_id_from_path(full_path)
-        context['id_Page']= id_path
-        context['alltasks']= LobbyTask.objects.filter(id_Lobby=id_path)
-        if(LobbyTask.objects.filter(id_Lobby=id_path).count() == 0):
+        context['id_Page'] = id_path
+        context['alltasks'] = LobbyTask.objects.filter(id_Lobby=id_path)
+        if (LobbyTask.objects.filter(id_Lobby=id_path).count() == 0):
             done = 1
         else:
             done = math.floor((LobbyTask.objects.filter(id_Lobby=id_path).filter(
@@ -125,6 +136,7 @@ class chosenLobby(TemplateView):
         context['progress_undone'] = 100 - done
         return context
 
+
 class closeLobby(TemplateView):
     template_name = 'allLobbyCreateTasks.html'
     success_url = '../list'
@@ -133,7 +145,7 @@ class closeLobby(TemplateView):
         context = super().get_context_data(**kwargs)
         full_path = self.request.get_full_path()
         id_path = full_path[::-1].split('/')[1]
-        x=Lobby.objects.filter(id=id_path)
+        x = Lobby.objects.filter(id=id_path)
 
         y = random.randint(1, 3)
         if y == 1:
@@ -142,15 +154,17 @@ class closeLobby(TemplateView):
             description = "Here is your cup!"
         else:
             description = "Here is your star!"
-        y = 'achievement/'+str(y)+'.png'
+        y = 'achievement/' + str(y) + '.png'
 
-        helpvar=[]
+        helpvar = []
         for z in range(x.values_list('users').count()):
             helpvar.append(x.values_list('users')[z][0])
         for z in helpvar:
-            Achievement.objects.create(title="You finished lobby number " + str(x[0].id), description=description, image=y, id_User=CustomPerson.objects.get(id=z))
+            Achievement.objects.create(title="You finished lobby number " + str(x[0].id), description=description,
+                                       image=y, id_User=CustomPerson.objects.get(id=z))
         x.delete()
         return context
+
 
 class ListAchievementView(ListView):  # noqa D101
     model = Achievement
@@ -160,8 +174,9 @@ class ListAchievementView(ListView):  # noqa D101
     def get_context_data(self, **kwargs):  # noqa D102
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
-        #context['data_photo'] = Achievement.objects.all()
-        context['data_photo'] = Achievement.objects.filter(id__in=Achievement.objects.values_list('id', flat=True)).filter(
+        # context['data_photo'] = Achievement.objects.all()
+        context['data_photo'] = Achievement.objects.filter(
+            id__in=Achievement.objects.values_list('id', flat=True)).filter(
             id_User=current_user
         )
 
