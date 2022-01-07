@@ -51,7 +51,7 @@ class LeaderBoard(TemplateView):
 
         context['leaderboard'] = LobbyTask.objects.all().values('id_Lobby__users__username').filter(isDone=True) \
             .annotate(total=Sum('points')).order_by('-total')
-
+        print(context['leaderboard'])
         return context
 
 
@@ -67,12 +67,24 @@ class LeaderBoardFriends(TemplateView):
         context['friends'] = friendship.models.Friend.objects.all().values('to_user').filter(from_user_id=current_user)
 
         x = Friend.objects.all().filter(to_user_id=current_user.id)
-        print(x)
+        y= []
+        for z in x:
+            y.append(CustomPerson.objects.all().filter(id=z.from_user_id))
+        contexthelp=[]
 
-        y = CustomPerson.objects.all().filter(id=x[0].from_user_id)
-        print(y)
+        def sort_fun(e):
+            print(e)
+            return e[0]['total']
 
-        context['xd'] = LobbyTask.objects.all().filter(id_Lobby__users__username=y[0].username, isDone=True) \
-            .values('id_Lobby__users__username').annotate(total=Sum('points')).order_by('-total')
 
+        for z in y:
+            contexthelp.append(LobbyTask.objects.all().filter(id_Lobby__users__username=z[0].username, isDone=True) \
+                               .values('id_Lobby__users__username').annotate(total=Sum('points')).order_by('-total'))
+
+        contexthelp.append(LobbyTask.objects.all().filter(id_Lobby__users__username=current_user, isDone=True) \
+                           .values('id_Lobby__users__username').annotate(total=Sum('points')).order_by('-total'))
+        print(contexthelp.sort(reverse= True, key=sort_fun))
+
+        context['xd'] = contexthelp
+        print(context['xd'])
         return context
