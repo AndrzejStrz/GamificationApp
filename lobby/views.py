@@ -1,13 +1,12 @@
 import math
 import random
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView
 
 from authorisation.models import CustomPerson
-from lobby import models
 from lobby.forms import LobbyCreate, TaskCreate
 from lobby.models import Lobby, LobbyTask, Achievement
-from django.contrib.sessions.backends.db import SessionStore
+
 
 
 class CreateLobby(CreateView):
@@ -162,6 +161,7 @@ class closeLobby(TemplateView):
         for z in helpvar:
             Achievement.objects.create(title="You finished lobby number " + str(x[0].id), description=description,
                                        image=y, id_User=CustomPerson.objects.get(id=z))
+        print(x)
         x.delete()
         return context
 

@@ -13,9 +13,13 @@
 
 
 </head>
-<body style="overflow-x: hidden; background-color: grey">
+
+<body style="overflow-x: hidden; background-color: beige;">
+{% include 'navBar.html' %}
+<div style="margin: 1rem">
 {% block title %}{% endblock %}
 {% block content %}
+
 {% for lobby in alllobbys %}
   <div class="row">
     <div class="col-md-6" style="margin:0 auto;">
@@ -36,7 +40,7 @@
 <div style="margin-top: 1rem;"></div>
 {% endfor %}
 {% endblock %}
-
+</div>
 </body>
 
 </html>

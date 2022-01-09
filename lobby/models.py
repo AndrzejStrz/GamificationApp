@@ -32,7 +32,7 @@ class LobbyTask(models.Model):
         choices=LevelOfDifficultly)
     description = models.CharField(max_length=1000)
     isDone = models.BooleanField(default=False)
-    id_Lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, related_name='id_Lobby',default=1)
+    id_Lobby = models.ForeignKey(Lobby, on_delete= models.SET_NULL, null=True, related_name='id_Lobby',default=1)
 
     def __str__(self):
         return f'{self.title}'

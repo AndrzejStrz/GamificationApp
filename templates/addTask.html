@@ -1,29 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-
-</head>
-<body style="overflow-x: hidden; background-color: grey; ">
-<form style="top: 50%;
-        left: 50%;
-        width: 30em;
-        height: 18em;
-        margin-top: -9em;
-        margin-left: -15em;
-        background-color: white;
-        position: fixed;
-        text-align: center;"  enctype='multipart/form-data' method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+{% extends 'mainHTML.html' %}
+{% block content %}
+<body style="overflow-x: hidden; background-color: beige; ">
+<div class="col-md-6" style="margin: auto; ">
+        <div class="card bg-dark text-white" style="margin: 8rem">
+            <div style="margin: 1rem"></div>
+            <form style="margin: auto" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div style="margin: 1rem"></div>
+            <button type="submit" class="btn btn-warning">Add task</button>
+            </form>
+    </div>
+</div>
 </body>
-</html>
+
+{% endblock %}

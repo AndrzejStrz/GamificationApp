@@ -1,8 +1,11 @@
+{% extends 'mainHTML.html' %}
 {% load static %}
 {% block content %}
   <body>
   <div class="main">
-
+    {% if data_photo|length == 0 %}
+        <div style="margin: auto 1rem; text-align: center;font-family: Verdana; font-size: large">You do not have achievements</div>
+    {% endif %}
     {% for data in data_photo %}
 
       <div style="text-align: center;">

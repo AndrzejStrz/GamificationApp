@@ -1,21 +1,29 @@
-
+{% extends 'mainHTML.html' %}
+{% block content %}
+    <body>
+<div style="margin: 1rem;"></div>
   <div class="main">
-
-    {% for data in leaderboard %}
-
-      <div style="text-align: center;">
-        <div class="bg-image hover-overlay ripple shadow-1-strong rounded custom" data-ripple-color="light">
-
-          {{ data.id_Lobby__users__username }}  {{ data.total}}
-          <div class="p-4 bg-dark rounded shadow-sm text-white">
-            {{ data.date_add }}<br/>
-          </div>
-        </div>
-        <hr/>
-
-      </div>
-
-    {% endfor %}
-
+  <div style="text-align: center;font-family: Verdana;  ">
+    <h1>All Users Ranking</h1>
   </div>
-  </body>
+    <table class="table" style="background: white">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Place</th>
+          <th scope="col">User</th>
+          <th scope="col">Points</th>
+        </tr>
+      </thead>
+    {% for data in leaderboard %}
+      <tbody>
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ data.id_Lobby__users__username }}</td>
+          <td>{{ data.total}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+{% endblock %}

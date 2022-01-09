@@ -1,30 +1,31 @@
-    <script>
-    $(targetSelector).sort(function (a, b) {
-         var result = $('div').sort(function (a, b) {
-
-          var contentA =parseInt( $(a).data('sort'));
-          var contentB =parseInt( $(b).data('sort'));
-          return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
-       });
-
-       $('#mylist').html(result);
-    }).appendTo($container);
-
-    </script>
-
+{% extends 'mainHTML.html' %}
+{% block content %}
+    <body>
+<div style="margin: 1rem;"></div>
   <div class="main">
-
-        {% for data in xd %}
-          <div style="text-align: center;" data-sort={{  data.0.total}}>
-            <div class="bg-image hover-overlay ripple shadow-1-strong rounded custom" data-ripple-color="light">
-              {{ data.0.id_Lobby__users__username }}  {{ data.0.total}}
-              <div class="p-4 bg-dark rounded shadow-sm text-white">
-                  <br/>
-              </div>
-            </div>
-            <hr/>
-          </div>
-        {% endfor %}
+  <div style="text-align: center;font-family: Verdana;  ">
+    <h1>Your Friends' Ranking</h1>
   </div>
-<div onload=""></div>
-  </body>
+    <table class="table" style="background: white">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Place</th>
+          <th scope="col">User</th>
+          <th scope="col">Points</th>
+        </tr>
+      </thead>
+    {% for data in friends_points_data %}
+    {% if data.0.total != None %}
+      <tbody>
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ data.0.id_Lobby__users__username }}</td>
+          <td>{{ data.0.total}}</td>
+        </tr>
+    {% endif %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+{% endblock %}

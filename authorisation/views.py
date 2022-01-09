@@ -73,8 +73,11 @@ class LeaderBoardFriends(TemplateView):
         contexthelp=[]
 
         def sort_fun(e):
-            print(e)
-            return e[0]['total']
+            while True:
+                try:
+                    return e[0]['total']
+                except:
+                    return 0
 
 
         for z in y:
@@ -83,8 +86,8 @@ class LeaderBoardFriends(TemplateView):
 
         contexthelp.append(LobbyTask.objects.all().filter(id_Lobby__users__username=current_user, isDone=True) \
                            .values('id_Lobby__users__username').annotate(total=Sum('points')).order_by('-total'))
-        print(contexthelp.sort(reverse= True, key=sort_fun))
+        print(contexthelp)
 
-        context['xd'] = contexthelp
-        print(context['xd'])
+        contexthelp.sort(reverse= True, key=sort_fun)
+        context['friends_points_data'] = contexthelp
         return context

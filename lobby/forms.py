@@ -21,6 +21,12 @@ class TaskCreate(forms.ModelForm):
     class Meta:
         model = LobbyTask
         fields = ['title', 'points', 'LevelOfDifficulty', 'description']
+        labels = {
+            'title': 'Title',
+            'points': 'Points',
+            'LevelOfDifficulty': 'Level of difficulty',
+            'description': 'Description',
+        }
 
 
 class IsDone(forms.ModelForm):
