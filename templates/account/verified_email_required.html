@@ -5,6 +5,9 @@
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block content %}
+    <div style="text-align: center;">
+            <div class="col-md-6" style="margin: auto; height: auto">
+          <div class="card bg-dark text-white" style="margin: 1rem;">
 <h1>{% trans "Verify Your E-mail Address" %}</h1>
 
 {% url 'account_email' as email_url %}
@@ -19,5 +22,7 @@ contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
 
 <p>{% blocktrans %}<strong>Note:</strong> you can still <a href="{{ email_url }}">change your e-mail address</a>.{% endblocktrans %}</p>
 
-
+          </div>
+            </div>
+    </div>
 {% endblock %}

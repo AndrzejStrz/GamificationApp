@@ -5,6 +5,9 @@
 {% block head_title %}{% trans "E-mail Addresses" %}{% endblock %}
 
 {% block content %}
+            <div style="text-align: center;">
+            <div class="col-md-6" style="margin: auto; height: auto">
+          <div class="card bg-dark text-white" style="margin: 1rem;">
     <h1>{% trans "E-mail Addresses" %}</h1>
 {% if user.emailaddress_set.all %}
 <p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>
@@ -53,6 +56,9 @@
         <button name="action_add" type="submit">{% trans "Add E-mail" %}</button>
     </form>
   {% endif %}
+          </div>
+            </div>
+            </div>
 
 {% endblock %}
 
