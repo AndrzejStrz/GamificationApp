@@ -91,3 +91,12 @@ class LeaderBoardFriends(TemplateView):
         contexthelp.sort(reverse= True, key=sort_fun)
         context['friends_points_data'] = contexthelp
         return context
+
+class HomeView(TemplateView):  # noqa D101
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):  # noqa D102
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        context['users'] = CustomPerson.objects.filter(id=current_user.id).all()
+        return context

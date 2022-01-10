@@ -1,0 +1,19 @@
+{% extends "mainHTML.html" %}
+
+{% block content %}
+
+    <div class="col-md-6" style="margin: auto; height: auto">
+      <div class="card bg-dark text-white" style="margin: 1rem;">
+
+
+                  <h4>    You are logged in as: </h4>
+                    <h4 style="color: red">{{ user.username }}</h4>
+                    <div style="margin-top: 3rem;"></div>
+                  <h6>You joined us on  <br/></h6>
+                    <h6 style="color: red">{{ user.date_joined }} <br/></h6>
+        </div>
+    <div style="margin-top: 1rem;"></div>
+    </div>
+
+
+{% endblock %}
