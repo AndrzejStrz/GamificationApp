@@ -2,6 +2,8 @@ import math
 import random
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView
+from friendship.models import Friend
+from friendship.templatetags.friendshiptags import register
 
 from authorisation.models import CustomPerson
 from lobby.forms import LobbyCreate, TaskCreate
